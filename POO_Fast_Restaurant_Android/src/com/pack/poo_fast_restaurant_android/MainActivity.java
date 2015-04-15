@@ -14,14 +14,13 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-	Dbhelper dbhelper = new Dbhelper(this);
-		
-	Admin admin1 = new Admin(0,"admin1","senha1");
+	DbHelper dbHelper = new DbHelper(this);	
 	
-	dbhelper.insertAdmin(admin1);
-	dbhelper.insertAdmin(new Admin(0,"admin2","senha2"));
+	//Admin admin1 = new Admin(0,"admin1","senha1");
+	//dbHelper.insertAdmin(admin1);
+	//dbHelper.insertAdmin(new Admin(0,"admin2","senha2"));
 	
-	List<Admin> listaAdmins = dbhelper.selectTodosOsAdmins();
+	List<Admin> listaAdmins = dbHelper.selectTodosOsAdmins();
 	
 	for (Iterator<Admin> iterator = listaAdmins.iterator(); iterator.hasNext();) {
 		Admin admin = (Admin) iterator.next();

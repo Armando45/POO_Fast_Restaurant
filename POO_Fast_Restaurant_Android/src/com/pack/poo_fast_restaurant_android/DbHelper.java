@@ -10,13 +10,13 @@ import android.database.sqlite.SQLiteDatabase;
 //import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class Dbhelper extends SQLiteOpenHelper{
+public class DbHelper extends SQLiteOpenHelper{
 	
 	private static final String NOME_BASE = "FastRestaurant";
-	private static final int VERSAO_BASE = 1;
+	private static final int VERSAO_BASE = 2;
 	
 
-	public Dbhelper(Context context) {
+	public DbHelper(Context context) {
 		super(context, NOME_BASE, null, VERSAO_BASE);
 	}
 
@@ -27,7 +27,6 @@ public class Dbhelper extends SQLiteOpenHelper{
 		
 	}
 	
-	//String sqlCreateTabelaAdmin = "CREATE TABLE Admin("+ "id INTEGER PRIMARY KEY AUTOINCREMENT,"+ "nome TEXT,"+ "senha TEXT,"+ ")";
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
