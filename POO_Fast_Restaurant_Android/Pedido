@@ -1,0 +1,70 @@
+package com.example.testawebservice;
+
+public class Pedido {
+	
+	private int id;
+	private String nome;
+	private int mesa;
+	private int preco;
+	private int estado;
+	
+	public Pedido(){
+		
+	}
+
+	public Pedido(int id, String nome, int mesa, int preco, int estado) {
+		super();
+		this.id = id;
+		this.nome = nome;
+		this.mesa = mesa;
+		this.preco = preco;
+		this.estado = estado;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public int getMesa() {
+		return mesa;
+	}
+
+	public void setMesa(int mesa) {
+		this.mesa = mesa;
+	}
+
+	public int getPreco() {
+		return preco;
+	}
+
+	public void setPreco(int preco) {
+		this.preco = preco;
+	}
+
+	public int getEstado() {
+		return estado;
+	}
+
+	@Override
+	public String toString() {
+		return "Id do Pedido: " + id + "\nNome: " + nome + "\nMesa: " + mesa
+				+ "\nPreço: " + preco + "\nEstado: " + estado;
+	}
+
+	public void setEstado(int estado) {
+		this.estado = estado;
+	}
+	
+}
