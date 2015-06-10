@@ -1,0 +1,50 @@
+package com.example.testawebservice;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+public class CadastroActivity extends Activity{
+	
+	protected void OnCreate(Bundle savedInstanceState){
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.cadastro);
+	
+
+	final EditText edId = (EditText) findViewById(R.id.etId);
+	final EditText edNome = (EditText) findViewById(R.id.etNome);
+	final EditText edMesa = (EditText) findViewById(R.id.etMesa);
+	final EditText edPreco = (EditText) findViewById(R.id.etPreco);
+	final EditText edEstado = (EditText) findViewById(R.id.etEstado);
+	Button btCadastro = (Button) findViewById(R.id.btCadastro);
+	
+	
+	btCadastro.setOnClickListener(new OnClickListener(){
+
+		@Override
+		public void onClick(View arg0) {
+			
+			
+			PedidoDAO dao = new PedidoDAO();
+		    boolean resultado = dao.inserirPedido(new Pedido(Integer.parseInt(edId.getText().toString()),
+		    		edNome.getText().toString(),Integer.parseInt(edMesa.getText().toString()),
+		    		Integer.parseInt(edPreco.getText().toString()),
+		    		Integer.parseInt(edEstado.getText().toString())));
+		    
+			if (resultado){
+				finish();
+			}else{
+				Toast.makeText(CadastroActivity.this, "Erro no cadastro", Toast.LENGTH_LONG).show();
+			}
+			
+			
+			
+		}
+	});
+	
+}
+}
