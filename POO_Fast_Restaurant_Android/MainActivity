@@ -1,0 +1,103 @@
+package com.example.testawebservice;
+
+import java.util.ArrayList;
+
+import android.os.Bundle;
+import android.os.StrictMode;
+import android.app.Activity;
+import android.content.Intent;
+import android.util.Log;
+import android.view.Menu;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.ListView;
+
+public class MainActivity extends Activity {
+
+	private ListView vlPedidos;
+	
+	
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        Button btAbreTelaCadastro = (Button) findViewById(R.id.btAbreTelaCadastro);
+        vlPedidos = (ListView) findViewById(R.id.vlPedidos);
+        
+        btAbreTelaCadastro.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View arg0) {
+				
+				Intent it = new Intent(MainActivity.this, CadastroActivity.class);
+				startActivity(it);
+				
+			}
+        	
+        });
+        
+        
+        
+        
+        if (android.os.Build.VERSION.SDK_INT > 9){
+        	StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
+        	StrictMode.setThreadPolicy(policy);
+        }
+        
+        
+        
+        
+        
+        
+        
+        
+    PedidoDAO dao = new PedidoDAO();
+    ArrayList<Pedido> lista = dao.buscarPendentes();
+    Log.d("ExemploWS", lista.toString());
+
+    
+    
+    //boolean resultado = dao.inserirPedido(new Pedido(9,"CupCake de Chocolate",9,8,0));
+    //Log.d("ExemploWS", resultado + "");
+    
+    
+    //ArrayList<Pedido> lista = dao.buscarTodosPedidos();
+    //Log.d("ExemploWS", lista.toString());
+    
+    //ArrayList<Pedido> lista = dao.buscarPendentes();
+    //Log.d("ExemploWS", lista.toString());
+    
+    //Boolean resposta = dao.atualizarPedido(new Pedido(9,"CupCake De Morango", 9, 6, 0));
+    //Log.d("ExemploWS", resposta + "");
+    
+    //Boolean resposta1 = dao.excluirPedido(4);
+    //Log.d("ExemploWS", resposta1 + "");
+    
+   
+    }
+    
+    @Override
+    protected void onResume(){
+    	super.onResume();
+    	
+        PedidoDAO dao = new PedidoDAO();
+        ArrayList<Pedido> lista = dao.buscarPendentes();
+        
+        ArrayAdapter<Pedido> adpPed = new ArrayAdapter<Pedido>(this, android.R.layout.simple_list_item_1, lista);
+        vlPedidos.setAdapter(adpPed);
+        
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    }
+    
