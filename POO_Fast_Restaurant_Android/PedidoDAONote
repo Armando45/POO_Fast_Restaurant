@@ -1,0 +1,139 @@
+package br.com.fastrestaurant.exemploWS;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.ArrayList;
+
+public class PedidoDAO {
+	
+	public boolean inserirPedido(Pedido pedido){
+		try{
+			Connection conn = new ConectaMySql().obtemConexao();
+			
+			String queryInserir = "INSERT INTO pedidos VALUES (?,?,?,?,?)";
+			PreparedStatement ppStm = conn.prepareStatement(queryInserir);
+			
+			ppStm.setInt(1, pedido.getId());
+			ppStm.setString(2, pedido.getNome());
+			ppStm.setInt(3, pedido.getMesa());
+			ppStm.setInt(4, pedido.getPreco());
+			ppStm.setInt(5, pedido.getEstado());
+			ppStm.executeUpdate();
+			conn.close();
+			
+		} catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}
+	
+	
+	public boolean atualizarPedido(Pedido pedido){
+		try{
+			Connection conn = new ConectaMySql().obtemConexao();
+			String queryAtualizar = "UPDATE pedidos SET nome = ?, mesa = ?, preco = ?, estado = ? WHERE id = ?";
+			PreparedStatement ppStm = conn.prepareStatement(queryAtualizar);
+			
+			ppStm.setString(1, pedido.getNome());
+			ppStm.setInt(2, pedido.getMesa());
+			ppStm.setInt(3, pedido.getPreco());
+			ppStm.setInt(4, pedido.getEstado());
+			ppStm.setInt(5, pedido.getId());
+			ppStm.executeUpdate();
+			conn.close();
+			
+		} catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}	
+	
+		
+	public boolean excluirPedido(Pedido pedido){
+		try{
+			Connection conn = new ConectaMySql().obtemConexao();
+			
+			String queryDeletar = "DELETE FROM pedidos WHERE id = ?";
+			PreparedStatement ppStm = conn.prepareStatement(queryDeletar);
+			
+			ppStm.setInt(1, pedido.getId());
+			ppStm.executeUpdate();
+			conn.close();
+			
+		} catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
+		
+		return true;
+	}	
+	
+	
+	public ArrayList<Pedido> buscarTodosPedidos(){
+		ArrayList<Pedido> lista = new ArrayList<Pedido>();
+		
+		try {
+			Connection conn = new ConectaMySql().obtemConexao();
+			String queryBuscar = "SELECT * FROM pedidos";
+			PreparedStatement ppStm = conn.prepareStatement(queryBuscar);
+			
+			ResultSet rSet = ppStm.executeQuery();
+			
+			while (rSet.next()){
+				Pedido ped = new Pedido();
+				ped.setId(rSet.getInt(1));
+				ped.setNome(rSet.getString(2));
+				ped.setMesa(rSet.getInt(3));
+				ped.setPreco(rSet.getInt(4));
+				ped.setEstado(rSet.getInt(5));
+				lista.add(ped);
+				
+			}
+			conn.close();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return lista;
+	}
+	
+	
+	public ArrayList<Pedido> buscarPendentes(){
+		ArrayList<Pedido> lista = new ArrayList<Pedido>();
+		
+		try {
+			Connection conn = new ConectaMySql().obtemConexao();
+			String queryBuscarPendentes = "SELECT * FROM pedidos WHERE estado = 0";
+			PreparedStatement ppStm = conn.prepareStatement(queryBuscarPendentes);
+			
+			ResultSet rSet = ppStm.executeQuery();
+			while (rSet.next()){
+				Pedido ped = new Pedido();
+				ped.setId(rSet.getInt(1));
+				ped.setNome(rSet.getString(2));
+				ped.setMesa(rSet.getInt(3));
+				ped.setPreco(rSet.getInt(4));
+				ped.setEstado(rSet.getInt(5));
+				lista.add(ped);
+			}
+			
+			conn.close();
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+		return lista;
+	}
+
+	
+	//SobreCarga do metodo excluir.
+	public boolean excluirPedido(int id){
+		
+		return excluirPedido(new Pedido(id,"",0,0,0));
+	}
+
+}
