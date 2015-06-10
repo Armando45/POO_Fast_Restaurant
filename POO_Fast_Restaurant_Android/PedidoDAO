@@ -1,0 +1,222 @@
+package com.example.testawebservice;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Vector;
+
+import org.ksoap2.SoapEnvelope;
+import org.ksoap2.serialization.SoapObject;
+import org.ksoap2.serialization.SoapPrimitive;
+import org.ksoap2.serialization.SoapSerializationEnvelope;
+import org.ksoap2.transport.HttpResponseException;
+import org.ksoap2.transport.HttpTransportSE;
+import org.xmlpull.v1.XmlPullParserException;
+
+public class PedidoDAO {
+	
+	private static final String URL = "http://192.168.25.166:8080/ExemploWS/services/PedidoDAO?wsdl";
+	private static final String NAMESPACE = "http://exemploWS.fastrestaurant.com.br";
+	
+	private static final String INSERIR = "inserirPedido";
+	private static final String ATUALIZAR = "atualizarPedido";
+	private static final String EXCLUIR = "excluirPedido";
+	private static final String BUSCAR_TODOS = "buscarTodosPedidos";
+	private static final String BUSCAR_PENDENTES = "buscarPendentes";
+	
+	
+	
+	
+	//-----------------------------------------INSERE NOVOS PEDIDOS!	
+	public boolean inserirPedido(Pedido pedido){
+		
+		SoapObject inserirPedido = new SoapObject(NAMESPACE, INSERIR);
+		SoapObject ped = new SoapObject(NAMESPACE, "pedido");
+		
+		ped.addProperty("id", pedido.getId());
+		ped.addProperty("nome", pedido.getNome());
+		ped.addProperty("mesa", pedido.getMesa());
+		ped.addProperty("preco", pedido.getPreco());
+		ped.addProperty("estado", pedido.getEstado());
+		
+		inserirPedido.addSoapObject(ped);
+		
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.setOutputSoapObject(inserirPedido);
+		
+		envelope.implicitTypes = true;
+		
+		HttpTransportSE http = new HttpTransportSE(URL);
+		
+		try {
+			http.call("urn" + INSERIR, envelope);
+			SoapPrimitive resposta = (SoapPrimitive) envelope.getResponse();
+			
+			return Boolean.parseBoolean(resposta.toString());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+
+	}
+	
+	//-----------------------------------------ATUALIZAR OS DADOS DE UM PEDIDO!
+	public boolean atualizarPedido(Pedido pedido){
+		
+		SoapObject atualizarPedido = new SoapObject(NAMESPACE, ATUALIZAR);
+		SoapObject ped = new SoapObject(NAMESPACE, "pedido");
+		
+		ped.addProperty("id", pedido.getId());
+		ped.addProperty("nome", pedido.getNome());
+		ped.addProperty("mesa", pedido.getMesa());
+		ped.addProperty("preco", pedido.getPreco());
+		ped.addProperty("estado", pedido.getEstado());
+		
+		atualizarPedido.addSoapObject(ped);
+		
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.setOutputSoapObject(atualizarPedido);
+		
+		envelope.implicitTypes = true;
+		
+		HttpTransportSE http = new HttpTransportSE(URL);
+		
+		try {
+			http.call("urn" + ATUALIZAR, envelope);
+			SoapPrimitive resposta = (SoapPrimitive) envelope.getResponse();
+			
+			return Boolean.parseBoolean(resposta.toString());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}	
+	}
+
+	
+	
+	//-----------------------------------------EXCLUI UM PEDIDO A PARTIR DO ID DELE!		
+	public boolean excluirPedido(Pedido pedido){
+		
+		SoapObject excluirPedido = new SoapObject(NAMESPACE, EXCLUIR);
+		SoapObject ped = new SoapObject(NAMESPACE, "pedido");
+		
+		ped.addProperty("id", pedido.getId());
+		ped.addProperty("nome", pedido.getNome());
+		ped.addProperty("mesa", pedido.getMesa());
+		ped.addProperty("preco", pedido.getPreco());
+		ped.addProperty("estado", pedido.getEstado());
+		
+		excluirPedido.addSoapObject(ped);
+		
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.setOutputSoapObject(excluirPedido);
+		
+		envelope.implicitTypes = true;
+		
+		HttpTransportSE http = new HttpTransportSE(URL);
+		
+		try {
+			http.call("urn" + EXCLUIR, envelope);
+			SoapPrimitive resposta = (SoapPrimitive) envelope.getResponse();
+			
+			return Boolean.parseBoolean(resposta.toString());
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}	
+	}
+	
+	
+	
+	//-----------------------------------------BUSCAR TODOS OS PEDIDOS REALIZADOS!	
+	public ArrayList<Pedido> buscarTodosPedidos(){
+		ArrayList<Pedido> lista = new ArrayList<Pedido>();
+		SoapObject buscarTodosPedidos = new SoapObject(NAMESPACE, BUSCAR_TODOS);
+		
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.setOutputSoapObject(buscarTodosPedidos);
+		
+		envelope.implicitTypes = true;
+		
+		HttpTransportSE http = new HttpTransportSE(URL);
+		
+		try {
+			http.call("urn" + BUSCAR_TODOS, envelope);
+			
+			Vector<SoapObject> resposta = (Vector<SoapObject>) envelope.getResponse();
+			for (SoapObject soapObject : resposta){
+				
+				Pedido ped = new Pedido();
+				
+				ped.setId(Integer.parseInt(soapObject.getPropertyAsString("id").toString()));
+				ped.setNome((soapObject.getPropertyAsString("nome").toString()));
+				ped.setMesa(Integer.parseInt(soapObject.getPropertyAsString("mesa").toString()));
+				ped.setPreco(Integer.parseInt(soapObject.getPropertyAsString("preco").toString()));
+				ped.setEstado(Integer.parseInt(soapObject.getPropertyAsString("estado").toString()));
+				
+				lista.add(ped);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		return lista;
+	}
+	
+	//-----------------------------------------BUSCAR TODOS OS PEDIDOS PENDENTES!
+	public ArrayList<Pedido> buscarPendentes(){
+
+		ArrayList<Pedido> lista = new ArrayList<Pedido>();
+		SoapObject buscarPendentes = new SoapObject(NAMESPACE, BUSCAR_PENDENTES);
+		
+		SoapSerializationEnvelope envelope = new SoapSerializationEnvelope(SoapEnvelope.VER11);
+		envelope.setOutputSoapObject(buscarPendentes);
+		
+		envelope.implicitTypes = true;
+		
+		HttpTransportSE http = new HttpTransportSE(URL);
+		
+		try {
+			http.call("urn" + BUSCAR_PENDENTES, envelope);
+			
+			Vector<SoapObject> resposta = (Vector<SoapObject>) envelope.getResponse();
+			for (SoapObject soapObject : resposta){
+				
+				Pedido ped = new Pedido();
+				
+				ped.setId(Integer.parseInt(soapObject.getPropertyAsString("id").toString()));
+				ped.setNome((soapObject.getPropertyAsString("nome").toString()));
+				ped.setMesa(Integer.parseInt(soapObject.getPropertyAsString("mesa").toString()));
+				ped.setPreco(Integer.parseInt(soapObject.getPropertyAsString("preco").toString()));
+				ped.setEstado(Integer.parseInt(soapObject.getPropertyAsString("estado").toString()));
+				
+				lista.add(ped);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}		
+		
+		return lista;
+	}
+
+	
+	//SobreCarga do metodo excluir.
+	public boolean excluirPedido(int id){
+		
+		return excluirPedido(new Pedido(id,"",0,0,0));
+	}
+
+
+	
+	
+	
+	
+	
+
+}
